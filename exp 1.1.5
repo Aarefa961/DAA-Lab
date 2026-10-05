@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_ELEMENTS 100
+#define MAX_SOLUTIONS 50000
+
+int weights[MAX_ELEMENTS];
+int current_subset[MAX_ELEMENTS];
+int n;
+int target_sum;
+
+// Arrays to store all discovered valid subsets
+int solutions[MAX_SOLUTIONS][MAX_ELEMENTS];
+int solution_sizes[MAX_SOLUTIONS];
+int solution_count = 0;
+
+// Backtracking function to find all subsets
+void find_subsets(int index, int current_sum, int subset_size) {
+    // Base case: when all elements have been considered
+    if (index == n) {
+        if (current_sum == target_sum) {
+            // Store the discovered subset
+            for (int i = 0; i < subset_size; i++) {
+                solutions[solution_count][i] = current_subset[i];
+            }
+            solution_sizes[solution_count] = subset_size;
+            solution_count++;
+        }
+        return;
+    }
+
+    // Choice 1: Include the current element
+    current_subset[subset_size] = weights[index];
+    find_subsets(index + 1, current_sum + weights[index], subset_size + 1);
+
+    // Choice 2: Exclude the current element
+    find_subsets(index + 1, current_sum, subset_size);
+}
+
+int main() {
+    // Input reading
+    if (scanf("%d", &n) != 1) return 0;
+
+    for (int i = 0; i < n; i++) {
+        if (scanf("%d", &weights[i]) != 1) return 0;
+    }
+
+    if (scanf("%d", &target_sum) != 1) return 0;
+
+    // Start backtracking from index 0
+    find_subsets(0, 0, 0);
+
+    // Output formatting
+    if (solution_count == 0) {
+        printf("-1\n");
+    } else {
+        // Print subsets in reverse order of discovery
+        for (int i = solution_count - 1; i >= 0; i--) {
+            for (int j = 0; j < solution_sizes[i]; j++) {
+                printf("%d", solutions[i][j]);
+                if (j < solution_sizes[i] - 1) {
+                    printf(" ");
+                }
+            }
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
