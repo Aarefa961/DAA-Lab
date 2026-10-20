@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main() {
+    int n, W;
+
+    scanf("%d", &n);
+
+    int value[n], weight[n];
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &value[i]);
+
+    for (int i = 0; i < n; i++)
+        scanf("%d", &weight[i]);
+
+    scanf("%d", &W);
+
+    int dp[W + 1];
+
+    for (int i = 0; i <= W; i++)
+        dp[i] = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int w = W; w >= weight[i]; w--) {
+            int take = value[i] + dp[w - weight[i]];
+
+            if (take > dp[w])
+                dp[w] = take;
+        }
+    }
+
+    printf("%d", dp[W]);
+
+    return 0;
+}
